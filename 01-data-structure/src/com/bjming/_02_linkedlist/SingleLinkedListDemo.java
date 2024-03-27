@@ -10,8 +10,103 @@ import java.util.Objects;
 public class SingleLinkedListDemo {
 
     public static void main(String[] args) {
+        //baseMethodTest();
+        //findLastIndexNodeTest();
+        SingleLinkedList list = new SingleLinkedList();
+        list.add(new HeroNode(1, "张三", "小三"));
+        list.add(new HeroNode(2, "李四", "小四"));
+        list.add(new HeroNode(3, "王五", "小五"));
+        list.add(new HeroNode(4, "赵六", "小六"));
+        list.add(new HeroNode(5, "赵六", "小六"));
+        list.add(new HeroNode(6, "赵六", "小六"));
+        SingleLinkedList result = reverse2(list.getHead());
+        //result.list();
 
-        SingleLinkedList list = new SingleLinkedList(new HeroNode(null, null, null));
+    }
+
+    // 单链表反转
+    // 不推荐 有些取巧
+    public static SingleLinkedList reverse(SingleLinkedList list){
+        HeroNode head = list.getHead();
+        int length = getLength(head);
+        HeroNode[] nodeArr = new HeroNode[length];
+        int idx = 0;
+        for(HeroNode tmp = head.getNext(); tmp != null; tmp = tmp.getNext()) {
+            nodeArr[idx++] = tmp;
+        }
+        SingleLinkedList result = new SingleLinkedList();
+        for (int i = length - 1; i >= 0 ; i--) {
+            HeroNode node = nodeArr[i];
+            node.setNext(null);
+            result.add(node);
+        }
+        return result;
+    }
+
+    // TODO 优化此方法
+    public static SingleLinkedList reverse2(HeroNode head){
+        HeroNode reverseNode = new HeroNode(null, null, null);
+
+        while (true) {
+            HeroNode node1 = head.getNext();
+            if (node1 == null) break;
+            HeroNode node2 = node1.getNext();
+
+            node1.setNext(reverseNode);
+            head.setNext(node2);
+            reverseNode = node1;
+        }
+
+        head.setNext(reverseNode);
+
+
+
+
+        HeroNode temp = head.getNext();
+        if (temp == null) {
+            System.err.println("当前链表为空，不予遍历");
+            return null;
+        }
+        while (temp != null) {
+            System.out.println(temp);
+            temp = temp.getNext();
+        }
+        return null;
+    }
+
+    private static void findLastIndexNodeTest() {
+        SingleLinkedList list = new SingleLinkedList();
+        list.add(new HeroNode(1, "张三", "小三"));
+        list.add(new HeroNode(2, "李四", "小四"));
+        list.add(new HeroNode(3, "王五", "小五"));
+        list.add(new HeroNode(4, "赵六", "小六"));
+        list.add(new HeroNode(5, "赵六", "小六"));
+        list.add(new HeroNode(6, "赵六", "小六"));
+        list.list();
+        HeroNode nodeDesc = findLastIndexNode(list.getHead(), 1);
+        System.out.println("nodeDesc = " + nodeDesc);
+    }
+
+
+    // 查找单链表中的倒数第k个节点
+    public static HeroNode findLastIndexNode(HeroNode head, Integer index) {
+        if (head.getNext() == null) {
+            return null;
+        }
+        int length = getLength(head);
+        if (index < 0 || index > length) {
+            return null;
+        }
+        HeroNode tmp = head.getNext();
+        // head 0 1 2 3 4
+        for (int i = 0; i < length - index; i++) {
+            tmp = tmp.getNext();
+        }
+        return tmp;
+    }
+
+    public static void baseMethodTest() {
+        SingleLinkedList list = new SingleLinkedList();
         System.out.println("----------------------初始添加");
         list.add(new HeroNode(2, "李四", "小四"));
         list.add(new HeroNode(3, "王五", "小五"));
@@ -20,7 +115,7 @@ public class SingleLinkedListDemo {
         list.list();
         System.out.println("----------------------根据id添加");
 
-        SingleLinkedList list1 = new SingleLinkedList(new HeroNode(null, null, null));
+        SingleLinkedList list1 = new SingleLinkedList();
         list1.addByOrder(new HeroNode(2, "李四", "小四"));
         list1.addByOrder(new HeroNode(3, "王五", "小五"));
         list1.addByOrder(new HeroNode(1, "张三", "小三"));
@@ -41,6 +136,25 @@ public class SingleLinkedListDemo {
         list.delete(4);
         list.delete(4);
         list.list();
+
+        int length = getLength(list.getHead());
+        System.out.println("length = " + length);
+    }
+
+    /**
+     * 获取到单链表的节点个数
+     * @param head 链表的头结点
+     * @return 有效节点个数
+     */
+    public static int getLength(HeroNode head) {
+        if (head.getNext() == null) {
+            return 0;
+        }
+        int length = 0;
+        for (HeroNode tmp = head.getNext(); tmp != null; tmp = tmp.getNext()) {
+            length++;
+        }
+        return length;
     }
 }
 
@@ -96,10 +210,11 @@ class HeroNode {
 }
 
 class SingleLinkedList {
-    private final HeroNode head;
+    private final HeroNode head = new HeroNode(null,null,null);
 
-    public SingleLinkedList(HeroNode head) {
-        this.head = head;
+
+    public HeroNode getHead() {
+        return head;
     }
 
     // 普通添加
