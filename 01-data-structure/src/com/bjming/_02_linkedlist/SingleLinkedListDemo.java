@@ -20,14 +20,26 @@ public class SingleLinkedListDemo {
         list.list();
         System.out.println("----------------------根据id添加");
 
-        list = new SingleLinkedList(new HeroNode(null, null, null));
-        list.addByOrder(new HeroNode(2, "李四", "小四"));
-        list.addByOrder(new HeroNode(3, "王五", "小五"));
-        list.addByOrder(new HeroNode(1, "张三", "小三"));
-        list.addByOrder(new HeroNode(6, "赵六", "小六"));
-        list.addByOrder(new HeroNode(5, "赵六", "小六"));
-        list.addByOrder(new HeroNode(5, "赵六", "小六"));
-        list.addByOrder(new HeroNode(4, "赵六", "小六"));
+        SingleLinkedList list1 = new SingleLinkedList(new HeroNode(null, null, null));
+        list1.addByOrder(new HeroNode(2, "李四", "小四"));
+        list1.addByOrder(new HeroNode(3, "王五", "小五"));
+        list1.addByOrder(new HeroNode(1, "张三", "小三"));
+        list1.addByOrder(new HeroNode(6, "赵六", "小六"));
+        list1.addByOrder(new HeroNode(5, "赵六", "小六"));
+        list1.addByOrder(new HeroNode(5, "赵六", "小六"));
+        list1.addByOrder(new HeroNode(4, "赵六", "小六"));
+        list1.list();
+
+
+        System.out.println("---------------------根据id修改");
+        list.update(new HeroNode(4, "李四XXXXXX", "小四XXXXX"));
+        list.list();
+
+        System.out.println("---------------------删除");
+        list.delete(4);
+        list.delete(4);
+        list.delete(4);
+        list.delete(4);
         list.list();
     }
 }
@@ -97,14 +109,6 @@ class SingleLinkedList {
             head.setNext(heroNode);
             return;
         }
-        //while (true) {
-        //    if (temp.getNext() == null) {
-        //        temp.setNext(heroNode);
-        //        return;
-        //    }
-        //    temp = temp.getNext();
-        //}
-
         // 找到最后一个节点
         while (temp.getNext() != null) {
             temp = temp.getNext();
@@ -133,6 +137,60 @@ class SingleLinkedList {
             }
 
             temp = temp.getNext();
+        }
+    }
+
+    /**
+     * 根据newHeroNode 的id进行修改
+     */
+    public void update(HeroNode newHeroNode) {
+        if (head.getNext() == null) {
+            System.err.println("当前链表为空，不允许修改");
+            return;
+        }
+        HeroNode tmp = head;
+        boolean flag = false;
+        while (tmp != null) {
+            if (tmp.getNext() == null) {
+                break;
+            }
+            if (tmp.getNext().getId().equals(newHeroNode.getId())) {
+                flag = true;
+                break;
+            }
+            tmp = tmp.getNext();
+        }
+        if (flag) {
+            newHeroNode.setNext(tmp.getNext().getNext());
+            tmp.setNext(newHeroNode);
+            System.out.println("更新成功!");
+        } else {
+            System.err.printf("链表中不存在id为：%s的数据", newHeroNode.getId());
+        }
+
+    }
+
+    public void delete(Integer id) {
+        if (head.getNext() == null) {
+            System.err.println("当前链表为空，不允许删除");
+            return;
+        }
+        HeroNode tmp = head;
+        boolean flag = false;
+        while (tmp != null) {
+            if (tmp.getNext() == null) {
+                break;
+            }
+            if (tmp.getNext().getId().equals(id)) {
+                flag = true;
+                break;
+            }
+            tmp = tmp.getNext();
+        }
+
+        if (flag) {
+            tmp.setNext(tmp.getNext().getNext());
+
         }
     }
 
